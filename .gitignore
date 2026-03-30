@@ -1,0 +1,46 @@
+# ─── Dependencies ───
+node_modules/
+frontend/node_modules/
+
+# ─── Build Artifacts ───
+frontend/dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# ─── Database ───
+backend/data/app.db
+backend/data/app.db-wal
+backend/data/app.db-shm
+
+# ─── ML Model Artifacts (auto-generated) ───
+backend/ml/models/
+backend/ml/registry.json
+backend/ml/model.json
+ml/model.pkl
+
+# ─── Environment ───
+.env
+.env.local
+.env.production
+
+# ─── OS files ───
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── IDE ───
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ─── Agent/AI metadata ───
+.agent/
+.gemini/
+frontend/queue/
+frontend/stitch.json
+frontend/DESIGN.md
+frontend/SITE.md
