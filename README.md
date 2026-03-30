@@ -90,16 +90,68 @@ Prediksi-Tanaman/
 ### Langkah 1: Clone Repository
 
 ```bash
-git clone https://github.com/<username>/Prediksi-Tanaman.git
-cd Prediksi-Tanaman
+git clone https://github.com/Kentox493/Agro-Tree.git
+cd Agro-Tree
 ```
 
 ---
 
-### Langkah 2: Setup Backend (Go API Server)
+### Langkah 2: Konfigurasi Environment Variables (⚠️ WAJIB)
+
+Backend memerlukan **environment variables** untuk API key dan secret. Salin file contoh lalu isi:
 
 ```bash
-# Masuk ke direktori backend
+cd backend
+
+# Salin file contoh
+cp .env.example .env    # Linux/macOS
+copy .env.example .env  # Windows
+```
+
+Buka file `backend/.env` lalu isi nilai yang diperlukan:
+
+```env
+# Port server (opsional, default: 8088)
+PORT=8088
+
+# JWT Secret Key — WAJIB diganti untuk production!
+JWT_SECRET=ganti-dengan-secret-key-anda-yang-kuat
+
+# Google Gemini API Key — WAJIB untuk fitur AI Chatbot
+# Dapatkan gratis di: https://aistudio.google.com/app/apikey
+GEMINI_API_KEY=masukkan-api-key-gemini-anda-di-sini
+
+# CORS Allowed Origins (opsional)
+ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
+```
+
+> **Cara set environment variable tanpa file `.env`:**
+> ```powershell
+> # Windows (PowerShell) — set sebelum menjalankan server
+> $env:GEMINI_API_KEY="AIzaSy..."
+> $env:JWT_SECRET="secret-key-anda"
+> go run main.go
+> ```
+> ```bash
+> # Linux/macOS
+> export GEMINI_API_KEY="AIzaSy..."
+> export JWT_SECRET="secret-key-anda"
+> go run main.go
+> ```
+
+| Variable | Wajib? | Default | Deskripsi |
+|---|---|---|---|
+| `PORT` | ❌ Opsional | `8088` | Port server backend |
+| `JWT_SECRET` | ⚠️ Ganti di production | `dev-only-change-me-in-production` | Secret key untuk JWT token |
+| `GEMINI_API_KEY` | ✅ **WAJIB** | _(kosong)_ | API key Google Gemini untuk chatbot. Tanpa ini, fitur chatbot tidak berfungsi. |
+| `ALLOWED_ORIGINS` | ❌ Opsional | `http://localhost:3000,...` | Domain yang diizinkan akses API (CORS) |
+
+---
+
+### Langkah 3: Setup Backend (Go API Server)
+
+```bash
+# Pastikan sudah di direktori backend
 cd backend
 
 # Download dependensi Go
@@ -127,7 +179,7 @@ Loaded info for 22 plants
 
 ---
 
-### Langkah 3: Setup Frontend (React + Vite)
+### Langkah 4: Setup Frontend (React + Vite)
 
 Buka terminal **baru** (jangan tutup terminal backend):
 
@@ -149,15 +201,18 @@ Jika berhasil, Anda akan melihat:
   ➜  Local:   http://localhost:3000/
 ```
 
+> **Catatan:** Frontend menggunakan Vite proxy — semua request ke `/api/*` otomatis diteruskan ke backend `http://localhost:8088`. Tidak perlu konfigurasi tambahan.
+
 ---
 
-### Langkah 4: Akses Aplikasi
+### Langkah 5: Akses Aplikasi
 
 Buka browser dan navigasi ke: **http://localhost:3000**
 
 1. Klik **"Mulai Gratis"** untuk membuat akun baru
 2. Login dengan akun yang sudah dibuat
 3. Mulai prediksi tanaman di halaman **Dashboard → Prediksi**
+4. Coba fitur **AI Chatbot** untuk konsultasi pertanian
 
 ---
 
@@ -248,25 +303,18 @@ Server log akan menampilkan:
 
 ---
 
-## 🔧 Konfigurasi Environment
+## 🔧 Konfigurasi Environment (Ringkasan)
 
-Backend dapat dikonfigurasi via environment variables:
+Lihat **Langkah 2** di bagian Setup untuk panduan lengkap. Referensi cepat:
 
-| Variable | Default | Deskripsi |
-|---|---|---|
-| `PORT` | `8088` | Port backend server |
-| `JWT_SECRET` | (built-in dev key) | Secret key untuk JWT token |
-| `GEMINI_API_KEY` | (built-in dev key) | API key Google Gemini untuk chatbot |
-| `ALLOWED_ORIGINS` | `http://localhost:5173,http://localhost:5175` | CORS whitelist |
+| Variable | Wajib? | Default | Deskripsi |
+|---|---|---|---|
+| `PORT` | ❌ | `8088` | Port backend server |
+| `JWT_SECRET` | ⚠️ Ganti di prod | `dev-only-change-me-in-production` | Secret key JWT |
+| `GEMINI_API_KEY` | ✅ **WAJIB** | _(kosong)_ | API key Google Gemini untuk chatbot |
+| `ALLOWED_ORIGINS` | ❌ | `http://localhost:3000,http://localhost:5173,http://localhost:5175` | CORS whitelist |
 
-**Contoh penggunaan:**
-```bash
-# Windows (PowerShell)
-$env:PORT="9090"; $env:JWT_SECRET="my-super-secret"; go run main.go
-
-# Linux/macOS
-PORT=9090 JWT_SECRET=my-super-secret go run main.go
-```
+> ⚠️ **JANGAN** hardcode API key di source code. Gunakan environment variable atau file `.env`.
 
 ---
 
